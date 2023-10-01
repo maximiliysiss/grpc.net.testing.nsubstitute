@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CF100ED6-3FBA-46AB-8215-4A55F904FE7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grpc.Net.Testing.Nsubstitute", "src\Grpc.Net.Testing.Nsubstitute\Grpc.Net.Testing.Nsubstitute.csproj", "{D6B94104-D326-4384-B10B-CA2A5EE79468}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5ECE830A-634A-48AD-81BE-642D45BF632D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grpc.Net.Testing.Nsubstitute.Tests", "tests\Grpc.Net.Testing.Nsubstitute.Tests\Grpc.Net.Testing.Nsubstitute.Tests.csproj", "{9B724ED9-A29C-43FC-8BA7-BD3FD923225D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{B8E4CBA7-B7D4-45E8-8218-9DAEEB177196}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D6B94104-D326-4384-B10B-CA2A5EE79468} = {CF100ED6-3FBA-46AB-8215-4A55F904FE7A}
+		{9B724ED9-A29C-43FC-8BA7-BD3FD923225D} = {5ECE830A-634A-48AD-81BE-642D45BF632D}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6B94104-D326-4384-B10B-CA2A5EE79468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6B94104-D326-4384-B10B-CA2A5EE79468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6B94104-D326-4384-B10B-CA2A5EE79468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6B94104-D326-4384-B10B-CA2A5EE79468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B724ED9-A29C-43FC-8BA7-BD3FD923225D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B724ED9-A29C-43FC-8BA7-BD3FD923225D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B724ED9-A29C-43FC-8BA7-BD3FD923225D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B724ED9-A29C-43FC-8BA7-BD3FD923225D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
