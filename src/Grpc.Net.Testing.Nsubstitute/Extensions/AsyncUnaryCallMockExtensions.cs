@@ -6,7 +6,7 @@ using NSubstitute.Core;
 
 namespace Grpc.Net.Testing.Nsubstitute.Extensions;
 
-public static class AsyncUnaryCallExtensions
+public static class AsyncUnaryCallMockExtensions
 {
     public static ConfiguredCall Returns<TResponse>(this AsyncUnaryCall<TResponse> value, TResponse returnThis)
         => Returns(value, () => returnThis);

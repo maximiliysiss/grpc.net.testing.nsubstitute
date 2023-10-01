@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Grpc.Net.Testing.Nsubstitute.Tests;
 
-public class AsyncUnaryCallExtensionsTests
+public class AsyncUnaryCallMockExtensionsTests
 {
     [Theory, AutoData]
     public void Simple_ShouldReturnResponse(TestResponse expectedResponse)
