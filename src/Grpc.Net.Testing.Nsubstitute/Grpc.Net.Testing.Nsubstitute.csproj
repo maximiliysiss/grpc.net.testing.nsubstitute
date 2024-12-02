@@ -9,9 +9,9 @@
     <RepositoryUrl>https://github.com/maximiliysiss/grpc.net.testing.nsubstitute</RepositoryUrl>
     <PackageId>Net.Testing.NSubstitute.Grpc</PackageId>
     <Authors>maximiliysiss</Authors>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
   </PropertyGroup>

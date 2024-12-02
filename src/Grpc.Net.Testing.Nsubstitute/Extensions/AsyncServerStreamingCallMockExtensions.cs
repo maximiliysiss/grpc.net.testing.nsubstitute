@@ -28,21 +28,23 @@ public static class AsyncServerStreamingCallMockExtensions
         return value.Returns(
             callInfo =>
             {
-                var responses = new Queue<TResponse>(func((TRequest)callInfo[0]));
-                var isThereNext = new Queue<bool>(Enumerable.Range(1, responses.Count + 1).Select(i => i <= responses.Count));
+                var enumerator = func((TRequest)callInfo[0]).ToList().GetEnumerator();
 
                 var responseStream = Substitute.For<IAsyncStreamReader<TResponse>>();
-                responseStream.Current.Returns(_ => responses.Dequeue());
-                responseStream.MoveNext(Arg.Any<CancellationToken>()).Returns(_ => isThereNext.Dequeue());
 
-                var fakeCall = new AsyncServerStreamingCall<TResponse>(
-                    responseStream,
-                    Task.FromResult(new Metadata()),
-                    () => Status.DefaultSuccess,
-                    () => new Metadata(),
-                    () => { });
+                responseStream
+                    .Current
+                    .Returns(_ => enumerator.Current);
+                responseStream
+                    .MoveNext(Arg.Any<CancellationToken>())
+                    .Returns(_ => Task.FromResult(enumerator.MoveNext()));
 
-                return fakeCall;
+                return new AsyncServerStreamingCall<TResponse>(
+                    responseStream: responseStream,
+                    responseHeadersAsync: Task.FromResult(new Metadata()),
+                    getStatusFunc: () => Status.DefaultSuccess,
+                    getTrailersFunc: () => new Metadata(),
+                    disposeAction: () => { });
             });
     }
 }

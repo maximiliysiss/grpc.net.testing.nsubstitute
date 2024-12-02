@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Grpc.Net.Testing.Nsubstitute.Shared;
 using NSubstitute;
 using NSubstitute.Core;
 
@@ -26,18 +26,36 @@ public static class AsyncDuplexStreamingCallMockExtensions
         => value.Returns(
             _ =>
             {
-                var requestStream = new WhenStreamWriter<TRequest>();
-                var handler = () => func(requestStream.ReadAll());
-                var responseStream = new WhenStreamReader<TResponse>(handler);
+                var requests = new List<TRequest>();
+                var responses = new List<TResponse>();
 
-                var fakeCall = new AsyncDuplexStreamingCall<TRequest, TResponse>(
-                    requestStream,
-                    responseStream,
-                    Task.FromResult(new Metadata()),
-                    () => Status.DefaultSuccess,
-                    () => new Metadata(),
-                    () => { });
+                var writer = Substitute.For<IClientStreamWriter<TRequest>>();
+                var reader = Substitute.For<IAsyncStreamReader<TResponse>>();
 
-                return fakeCall;
+                writer
+                    .WriteAsync(Arg.Any<TRequest>())
+                    .Returns(Task.CompletedTask)
+                    .AndDoes(c => requests.Add((TRequest)c[0]));
+                writer
+                    .CompleteAsync()
+                    .Returns(Task.CompletedTask)
+                    .AndDoes(_ => responses.AddRange(func(requests)));
+
+                var index = -1;
+
+                reader
+                    .Current
+                    .Returns(_ => responses[index]);
+                reader
+                    .MoveNext(Arg.Any<CancellationToken>())
+                    .Returns(c => Task.FromResult(++index < responses.Count));
+
+                return new AsyncDuplexStreamingCall<TRequest, TResponse>(
+                    requestStream: writer,
+                    responseStream: reader,
+                    responseHeadersAsync: Task.FromResult(new Metadata()),
+                    getStatusFunc: () => Status.DefaultSuccess,
+                    getTrailersFunc: () => new Metadata(),
+                    disposeAction: () => { });
             });
 }

@@ -24,7 +24,12 @@ public class AsyncDuplexStreamingCallMockExtensionsTests
 
         // Act
         var call = grpcMock.SimpleClientServerStream();
-        var messages = await call.ResponseStream.ReadAllAsync().ToArrayAsync();
+
+        await call.RequestStream.CompleteAsync();
+
+        var messages = await call.ResponseStream
+            .ReadAllAsync()
+            .ToArrayAsync();
 
         // Assert
         messages.Should().BeEquivalentTo(expectedResponses);
@@ -43,6 +48,7 @@ public class AsyncDuplexStreamingCallMockExtensionsTests
         var call = grpcMock.SimpleClientServerStream();
 
         await call.RequestStream.WriteAllAsync(requests, complete: true);
+
         var messages = await call.ResponseStream.ReadAllAsync().ToArrayAsync();
 
         // Assert
@@ -60,6 +66,9 @@ public class AsyncDuplexStreamingCallMockExtensionsTests
 
         // Act
         var call = grpcMock.SimpleClientServerStream();
+
+        await call.RequestStream.CompleteAsync();
+
         var messages = await call.ResponseStream.ReadAllAsync().ToArrayAsync();
 
         // Assert
@@ -79,6 +88,7 @@ public class AsyncDuplexStreamingCallMockExtensionsTests
         var call = grpcMock.SimpleClientServerStream();
 
         await call.RequestStream.WriteAllAsync(requests, complete: true);
+
         var messages = await call.ResponseStream.ReadAllAsync().ToArrayAsync();
 
         // Assert
@@ -98,6 +108,7 @@ public class AsyncDuplexStreamingCallMockExtensionsTests
         var call = grpcMock.SimpleClientServerStream();
 
         await call.RequestStream.WriteAllAsync(requests, complete: true);
+
         var messages = await call.ResponseStream.ReadAllAsync().ToArrayAsync();
 
         // Assert
@@ -123,6 +134,7 @@ public class AsyncDuplexStreamingCallMockExtensionsTests
         var call = grpcMock.SimpleClientServerStream();
 
         var requestTask = call.RequestStream.WriteAllAsync(requests, complete: true);
+
         var messages = await call.ResponseStream.ReadAllAsync().ToArrayAsync();
 
         await requestTask;
@@ -150,6 +162,7 @@ public class AsyncDuplexStreamingCallMockExtensionsTests
         var call = grpcMock.SimpleClientServerStream();
 
         var requestTask = call.RequestStream.WriteAllAsync(requests, complete: true);
+
         var messages = await call.ResponseStream.ReadAllAsync().ToArrayAsync();
 
         await requestTask;

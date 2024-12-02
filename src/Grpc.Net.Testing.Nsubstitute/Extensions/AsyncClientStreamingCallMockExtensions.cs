@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Grpc.Net.Testing.Nsubstitute.Shared;
 using NSubstitute;
 using NSubstitute.Core;
 
@@ -26,18 +25,27 @@ public static class AsyncClientStreamingCallMockExtensions
         => value.Returns(
             _ =>
             {
-                var requestStream = new WhenStreamWriter<TRequest>();
-                var stream = requestStream.ReadAll();
-                var responseTask = Task.Run(() => func(stream));
+                var requests = new List<TRequest>();
 
-                var fakeCall = new AsyncClientStreamingCall<TRequest, TResponse>(
-                    requestStream,
-                    responseTask,
-                    Task.FromResult(new Metadata()),
-                    () => Status.DefaultSuccess,
-                    () => new Metadata(),
-                    () => { });
+                var taskCompletionSource = new TaskCompletionSource<TResponse>();
 
-                return fakeCall;
+                var reader = Substitute.For<IClientStreamWriter<TRequest>>();
+
+                reader
+                    .WriteAsync(Arg.Any<TRequest>())
+                    .Returns(Task.CompletedTask)
+                    .AndDoes(c => requests.Add((TRequest)c[0]));
+                reader
+                    .CompleteAsync()
+                    .Returns(Task.CompletedTask)
+                    .AndDoes(_ => taskCompletionSource.TrySetResult(func(requests)));
+
+                return new AsyncClientStreamingCall<TRequest, TResponse>(
+                    requestStream: reader,
+                    responseAsync: taskCompletionSource.Task,
+                    responseHeadersAsync: Task.FromResult(new Metadata()),
+                    getStatusFunc: () => Status.DefaultSuccess,
+                    getTrailersFunc: () => new Metadata(),
+                    disposeAction: () => { });
             });
 }

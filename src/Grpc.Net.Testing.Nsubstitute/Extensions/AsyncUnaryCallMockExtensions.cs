@@ -17,9 +17,9 @@ public static class AsyncUnaryCallMockExtensions
     public static ConfiguredCall Returns<TRequest, TResponse>(this AsyncUnaryCall<TResponse> value, Func<TRequest, TResponse> func)
         => value.Returns(
             callInfo => new AsyncUnaryCall<TResponse>(
-                Task.FromResult(func((TRequest)callInfo[0])),
-                Task.FromResult(new Metadata()),
-                () => Status.DefaultSuccess,
-                () => new Metadata(),
-                () => { }));
+                responseAsync: Task.FromResult(func((TRequest)callInfo[0])),
+                responseHeadersAsync: Task.FromResult(new Metadata()),
+                getStatusFunc: () => Status.DefaultSuccess,
+                getTrailersFunc: () => new Metadata(),
+                disposeAction: () => { }));
 }
